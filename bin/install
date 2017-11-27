@@ -14,7 +14,7 @@ install_minishift() {
   local bin_install_path="$install_path/bin"
   local download_url="$(get_download_url $version)"
 
-  mkdir -p "${bin_install_path}"
+  mkdir -p ${bin_install_path}
 
   local bin_path="${bin_install_path}/minishift"
   local tempdir=""
@@ -22,7 +22,7 @@ install_minishift() {
 
   echo "Downloading minishift v${version} from ${download_url}"  
   if [[ "${version}" == 0* ]]; then
-    install_executable $download_url $bin_path $tempdir
+    install_executable $download_url $bin_path
   else
     install_archive $download_url $install_path $bin_path $tempdir
   fi
@@ -35,20 +35,16 @@ install_archive() {
   local tempdir=$4
   
   curl -sSL "$download_url" -o "${tempdir}/minishift.archive.tgz"
-
-  tar -C "${install_path}" -xzf "${tempdir}/minishift.archive.tgz"
-  rm -rf "${tempdir}"
-  
+  tar -C "${install_path}/bin" -xzf "${tempdir}/minishift.archive.tgz"  --strip 1 # this works only for latest versions (e.g 1.2 is a flat archive)
   chmod +x $bin_path
+  rm -rf "${tempdir}"
 }
 
 install_executable() {
   local download_url=$1
   local bin_path=$2
-  local tempdir=$3
-  curl -sSL "$download_url" -o "${tempdir}/minishift"
-  cp "${tempdir}/minishift" $bin_path
-  chmod +x $bin_path
+  curl -sSL "$download_url" -o "${bin_path}/minishift"
+  chmod +x "${bin_path}/minishift"
 }
 
 get_arch() {
