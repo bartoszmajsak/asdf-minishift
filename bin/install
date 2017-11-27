@@ -17,14 +17,37 @@ install_minishift() {
   mkdir -p "${bin_install_path}"
 
   local bin_path="${bin_install_path}/minishift"
-  echo "Downloading minishift v${version} from ${download_url}"
-  
+  local tempdir=""
   [ "linux" = "$(get_arch)" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
+
+  echo "Downloading minishift v${version} from ${download_url}"  
+  if [[ "${version}" == 0* ]]; then
+    install_executable $download_url $bin_path $tempdir
+  else
+    install_archive $download_url $install_path $bin_path $tempdir
+  fi
+}
+
+install_archive() {
+  local download_url=$1
+  local install_path=$2
+  local bin_path=$3
+  local tempdir=$4
+  
   curl -s "$download_url" -o "${tempdir}/minishift.archive.tgz"
 
   tar -C "${install_path}" -xzf "${tempdir}/minishift.archive.tgz"
   rm -rf "${tempdir}"
   
+  chmod +x $bin_path
+}
+
+install_executable() {
+  local download_url=$1
+  local bin_path=$2
+  local tempdir=$3
+  curl -s "$download_url" -o "${tempdir}/minishift"
+  cp "${tempdir}/minishift" $bin_path
   chmod +x $bin_path
 }
 
@@ -39,7 +62,7 @@ get_download_url() {
   local filename=""
   if [[ "${version}" == 0* ]]; then
     # Releases prior to v1.x don't have version in the archive name
-    filename="minishift-$(get_arch)-amd64.tgz"
+    filename="minishift-$(get_arch)-amd64"
   else
     filename="minishift-${version}-$(get_arch)-amd64.tgz"
   fi
