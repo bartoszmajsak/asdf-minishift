@@ -19,7 +19,7 @@ install_minishift() {
   local bin_path="${bin_install_path}/minishift"
   echo "Downloading minishift v${version} from ${download_url}"
   
-  [ "linux" = "${platform}" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
+  [ "linux" = "$(get_arch)" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
   curl -s "$download_url" -o "${tempdir}/minishift.archive.tgz"
 
   tar -C "${install_path}" -xzf "${tempdir}/minishift.archive.tgz"
@@ -31,12 +31,12 @@ install_minishift() {
 get_arch() {
   local platform=""
   [ "Linux" = "$(uname)" ] && platform="linux" || platform="darwin"
-  echo "${platform}-amd64.tgz"
+  echo "${platform}"
 }
 
 get_download_url() {
   local version="$1"
-  local filename="minishift-${version}-$(get_arch)"
+  local filename="minishift-${version}-$(get_arch)-amd64.tgz"
   echo "https://github.com/minishift/minishift/releases/download/v${version}/${filename}"
 }
 
