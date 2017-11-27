@@ -36,7 +36,13 @@ get_arch() {
 
 get_download_url() {
   local version="$1"
-  local filename="minishift-${version}-$(get_arch)-amd64.tgz"
+  local filename=""
+  if [[ "${version}" == 0* ]]; then
+    # Releases prior to v1.x don't have version in the archive name
+    filename="minishift-$(get_arch)-amd64.tgz"
+  else
+    filename="minishift-${version}-$(get_arch)-amd64.tgz"
+  fi
   echo "https://github.com/minishift/minishift/releases/download/v${version}/${filename}"
 }
 
