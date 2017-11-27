@@ -19,7 +19,7 @@ install_minishift() {
   local bin_path="${bin_install_path}/minishift"
   echo "Downloading minishift v${version} from ${download_url}"
   
-  [ "linux" = "${platform}" ] && tempdir=$(mktemp -d asdf-minishift.XXXX) || tempdir=$(mktemp -dt asdf-minishift)
+  [ "linux" = "${platform}" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
   curl -s "$download_url" -o "${tempdir}/minishift.archive.tgz"
 
   tar -C "${install_path}" -xzf "${tempdir}/minishift.archive.tgz"
