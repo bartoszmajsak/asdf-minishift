@@ -34,7 +34,7 @@ install_archive() {
   local bin_path=$3
   local tempdir=$4
   
-  curl -s "$download_url" -o "${tempdir}/minishift.archive.tgz"
+  curl -sSL "$download_url" -o "${tempdir}/minishift.archive.tgz"
 
   tar -C "${install_path}" -xzf "${tempdir}/minishift.archive.tgz"
   rm -rf "${tempdir}"
@@ -46,7 +46,7 @@ install_executable() {
   local download_url=$1
   local bin_path=$2
   local tempdir=$3
-  curl -s "$download_url" -o "${tempdir}/minishift"
+  curl -sSL "$download_url" -o "${tempdir}/minishift"
   cp "${tempdir}/minishift" $bin_path
   chmod +x $bin_path
 }
