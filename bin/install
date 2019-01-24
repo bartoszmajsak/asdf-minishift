@@ -3,9 +3,9 @@
 set -e
 set -o pipefail
 
-ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
-[ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
-[ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
+# ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
+# [ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
+# [ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
 
 install() {
   local install_type=$1
@@ -68,6 +68,23 @@ get_arch() {
   esac
 }
 
+get_ext() {
+  case "$(uname -s)" in
+  
+    Darwin|Linux)
+      echo 'tgz'
+      ;;
+  
+    CYGWIN*|MINGW32*|MSYS*)
+      echo 'zip'
+      ;;
+  
+    *)
+      echo 'zip'
+      ;;
+  esac
+}
+
 get_download_url() {
   local version="$1"
   local filename=""
@@ -75,7 +92,7 @@ get_download_url() {
     # Releases prior to v1.x don't have version in the archive name
     filename="minishift-$(get_arch)-amd64"
   else
-    filename="minishift-${version}-$(get_arch)-amd64.tgz"
+    filename="minishift-${version}-$(get_arch)-amd64.$(get_ext)"
   fi
   echo "https://github.com/minishift/minishift/releases/download/v${version}/${filename}"
 }
