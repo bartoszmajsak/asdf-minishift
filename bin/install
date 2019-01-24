@@ -20,7 +20,7 @@ install() {
   local tempdir=""
   [ "linux" = "$(get_arch)" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
 
-  echo "Downloading minishift v${version} from ${download_url}"  
+  echo "Downloading minishift ${version} from ${download_url}"
   if [[ "${version}" == 0* ]]; then
     install_executable $download_url $bin_path
   else
@@ -48,9 +48,24 @@ install_executable() {
 }
 
 get_arch() {
-  local platform=""
-  [ "Linux" = "$(uname)" ] && platform="linux" || platform="darwin"
-  echo "${platform}"
+  case "$(uname -s)" in
+
+    Darwin)
+      echo 'darwin'
+      ;;
+
+    Linux)
+      echo 'linux'
+      ;;
+
+    CYGWIN*|MINGW32*|MSYS*)
+      echo 'windows'
+      ;;
+
+    *)
+      echo 'other OS'
+      ;;
+  esac
 }
 
 get_download_url() {
