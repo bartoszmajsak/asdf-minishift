@@ -18,7 +18,7 @@ install() {
 
   local bin_path="${bin_install_path}/minishift"
   local tempdir=""
-  [ "linux" = "$(get_arch)" ] && tempdir=$(mktemp -d asdf-minishift.XXXXXXX) || tempdir=$(mktemp -dt asdf-minishift)
+  [ "darwin" = "$(get_arch)" ] && tempdir=$(mktemp -dt asdf-minishift) || tempdir=$(mktemp -d asdf-minishift.XXXXXXXXXX)
 
   echo "Downloading minishift ${version} from ${download_url}"
   if [[ "${version}" == 0* ]]; then
